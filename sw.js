@@ -1,5 +1,5 @@
 // オフラインでも遊べるように、全ファイルを最初に保存しておく
-const CACHE = 'kizami-pad-v18';
+const CACHE = 'kizami-pad-v19';
 const FILES = ['./', 'index.html', 'app.css', 'app.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png',
   ...['trap-snare', 'trap-clap', 'trap-hat_closed', 'perc-tom_low', 'perc-tom_high', 
     'perc-rim', 'perc-shaker', 'perc-clave', 'perc-cowbell', 'house-clap', 'perc-conga', 'perc-snap', 'perc-bass', 'perc-dive', 'perc-kick_punch'].map((n) => `samples/${n}.wav`)];

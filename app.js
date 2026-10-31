@@ -2,11 +2,11 @@
 const $ = (id) => document.getElementById(id);
 
 const LANE = {
-  kick: ['キック', '#ff6a3d'], kick_punch: ['キック', '#ff6a3d'], snare: ['スネア', '#f2c14e'], clap: ['クラップ', '#e86aa8'],
-  hat_closed: ['ハット閉', '#3dd6c6'], hat_open: ['ハット開', '#5aa9ff'], sub: ['サブ808', '#a58bff'], dive: ['ダイブ', '#a58bff'], bass: ['プラックベース', '#7a6bff'],
-  tom_low: ['タム低', '#8bd450'], tom_high: ['タム高', '#6fc2a0'], shaker: ['シェイカー', '#d8d36a'], clave: ['クラーベ', '#e0915a'], conga: ['コンガ', '#e8c4ff'], snap: ['スナップ', '#7fd0e8'], rim: ['リム', '#ffb347'], cowbell: ['カウベル', '#c9a227'],
+  kick: ['Kick', '#ff6a3d'], kick_punch: ['Kick', '#ff6a3d'], snare: ['Snare', '#f2c14e'], clap: ['Clap', '#e86aa8'],
+  hat_closed: ['Hi-Hat', '#3dd6c6'], hat_open: ['Open Hat', '#5aa9ff'], sub: ['Sub 808', '#a58bff'], dive: ['Dive', '#a58bff'], bass: ['Pluck Bass', '#7a6bff'],
+  tom_low: ['Low Tom', '#8bd450'], tom_high: ['High Tom', '#6fc2a0'], shaker: ['Shaker', '#d8d36a'], clave: ['Clave', '#e0915a'], conga: ['Conga', '#e8c4ff'], snap: ['Snap', '#7fd0e8'], rim: ['Rim', '#ffb347'], cowbell: ['Cowbell', '#c9a227'],
 };
-const GENRE = { trap: 'トラップ', drill: 'ドリル', boombap: 'ブーンバップ', perc: 'パーカッション', house: 'ハウス', techno: 'テクノ' };
+const GENRE = { trap: 'Trap', drill: 'Drill', boombap: 'Boom Bap', perc: 'Perc', house: 'House', techno: 'Techno' };
 // 横3 × 縦5。上が高い音、下が低い音。1行が1つの系統（高域・金属小物・手拍子・太鼓・低域）。[ジャンル, 音]
 const PADS = [
   ['perc', 'shaker'], ['trap', 'hat_closed'], ['perc', 'clave'],
@@ -72,25 +72,25 @@ setInterval(tick, 25);
 
 function startLoop() {
   loop.start = ctx.currentTime + 0.05; loop.scheduled = loop.start; loop.running = true;
-  $('play').classList.add('on'); $('play').textContent = '■ 停止';
+  $('play').classList.add('on'); $('play').textContent = '■ Stop';
 }
 function stopLoop() {
   loop.running = false; stopRec();
-  $('play').classList.remove('on'); $('play').textContent = '▶ 再生'; $('posbar').style.width = '0';
+  $('play').classList.remove('on'); $('play').textContent = '▶ Play'; $('posbar').style.width = '0';
 }
 function startRec() {
   if (!loop.running) startLoop();
   loop.recording = true; loop.cur = []; loop.layers.push(loop.cur);
-  $('rec').classList.add('on'); $('rec').textContent = '● 録音中';
-  msg('録音中。パッドを叩くと、ループの今の位置に入ります');
+  $('rec').classList.add('on'); $('rec').textContent = '● Recording';
+  msg('Recording. Hits are placed at the current loop position');
 }
 function stopRec() {
   if (!loop.recording) return;
   loop.recording = false;
   if (loop.cur && loop.cur.length === 0) loop.layers.pop();   // 何も叩かなかった層は残さない
   loop.cur = null;
-  $('rec').classList.remove('on'); $('rec').textContent = '● 録音';
-  msg(loop.layers.length ? `${loop.layers.length} 層。続けて ● で重ね録りできます` : '');
+  $('rec').classList.remove('on'); $('rec').textContent = '● Rec';
+  msg(loop.layers.length ? `${loop.layers.length} layer(s). Press Rec again to overdub` : '');
 }
 function record(i, vel, hitTime) {
   const len = loopLen();
@@ -142,11 +142,11 @@ function frame() {
 }
 
 async function begin() {
-  $('startbtn').disabled = true; $('startbtn').textContent = '読み込み中…';
+  $('startbtn').disabled = true; $('startbtn').textContent = 'Loading…';
   ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
   master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
   await ctx.resume();
-  try { await load(); } catch (e) { msg('音の読み込みに失敗しました: ' + e); }
+  try { await load(); } catch (e) { msg('Failed to load sounds: ' + e); }
   $('start').classList.add('hide');
 }
 
@@ -156,12 +156,12 @@ $('play').onclick = () => (loop.running ? stopLoop() : startLoop());
 $('rec').onclick = () => (loop.recording ? stopRec() : startRec());
 $('undo').onclick = () => {
   if (loop.recording) stopRec();
-  if (loop.layers.pop()) msg(`1つ戻しました（残り ${loop.layers.length} 層）`);
+  if (loop.layers.pop()) msg(`Undone (${loop.layers.length} layer(s) left)`);
 };
-$('clear').onclick = () => { stopRec(); loop.layers = []; msg('録音を全部消しました'); };
+$('clear').onclick = () => { stopRec(); loop.layers = []; msg('All recordings cleared'); };
 ['bpm', 'bars'].forEach((id) => $(id).addEventListener('change', () => {
   // 長さやテンポを変えると録音の位置がずれるので、録音は消す
-  if (loop.layers.length) { loop.layers = []; stopRec(); msg('テンポか小節数を変えたので、録音を消しました'); }
+  if (loop.layers.length) { loop.layers = []; stopRec(); msg('Tempo or bars changed, so the recording was cleared'); }
   if (loop.running) { loop.start = ctx.currentTime + 0.05; loop.scheduled = loop.start; }
 }));
 document.addEventListener('contextmenu', (e) => e.preventDefault());
