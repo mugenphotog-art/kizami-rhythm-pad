@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#0e0f13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>KIZAMI Rhythm Pad</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="start" class="start"><button id="startbtn">タップして始める</button></div>
+
+<header>
+  <h1>KIZAMI <span>Pad</span></h1>
+  <label>BPM<input id="bpm" type="number" inputmode="numeric" min="60" max="200" value="120"></label>
+  <label>小節<select id="bars"><option>1</option><option selected>2</option><option>4</option></select></label>
+  <label class="chk"><input id="metro" type="checkbox" checked>クリック</label>
+  <label class="chk"><input id="quant" type="checkbox" checked>拍に揃える</label>
+</header>
+
+<main id="pads" aria-label="パッド"></main>
+
+<footer>
+  <div class="pos"><div id="posbar"></div></div>
+  <div class="tr">
+    <button id="rec" class="rec">● 録音</button>
+    <button id="play">▶ 再生</button>
+    <button id="undo">1つ戻す</button>
+    <button id="clear">全消し</button>
+  </div>
+  <div id="msg" class="msg"></div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
